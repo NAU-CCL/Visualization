@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.2/joint.css" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.js"></script>
+
+  <script type="text/javascript" src="./visualize.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Retrieve the saved data from local storage
+      let formData = retrieveFormData();
+      var id = createInputs(formData);
+
+      // Populate the form with the saved data
+      populateForm(formData);
+      var wrapper = $(".wrapper"); //Fields wrapper
+      var add_button = $(".add_field_button"); //Add button ID
+      var run = $(".visualize_btn");
+
+      $(add_button).click(function (e) { //on add input button click
+        e.preventDefault();
+        id++; //increment id number
+        $(wrapper).append('<div class="row row-cols-3" style="padding: 1em;">' +
+          '<div class="col-sm-3">' +
+          '<input type="text" class="form-control" id="inputState1_' + id + '" placeholder="State 1" />' +
+          '</div>' +
+          '<div class="col-sm-3">' +
+          '<input type="text" class="form-control" id="inputState2_' + id + '" placeholder="State 2" />' +
+          '</div>' +
+          '<div class="col-sm-5">' +
+          '<input type="text" class="form-control" id="inputRate_' + id + '" placeholder="Rate" />' +
+          '</div>' +
+          '<button class="btn btn-outline-danger remove_field" type="button">Remove</button>' +
+          '</div>'); //add input box
+      });
+
+      $(wrapper).on("click", ".remove_field", function (e) { //user click on remove text
+        e.preventDefault();
+        $(this).parent("div").remove();
+        id--; //decrement id number
+      })
+
+      $(run).click(function (e) {
+        e.preventDefault();
+
+        // Create an object to store the form data
+        let formData = {};
+
+        // Loop through each input field in the form and store its value in the object
+        $('#equations input').each(function () {
+          let inputId = $(this).attr('id');
+          formData[inputId] = $(this).val();
+        });
+
+        // Save the form data to local storage
+        localStorage.setItem('formData', JSON.stringify(formData));
+
+        Visualize();
+      })
+    });
+
+  </script>
+</head>
+
+<body class="container-xxl" style="text-align: center;">
+  <form id="equations">
+    <div class="col-sm-12 ">
+      <button class="add_field_button btn btn-default">Add More Fields</button>
+    </div>
+    <div class="wrapper">
+    </div>
+    </div>
+    <div class="col-sm-12" style="padding-top: 1em;">
+      <button type="submit" class="visualize_btn btn btn-primary">Visualize</button>
+    </div>
+  </form>
+
+  <!-- content -->
+  <div id="myholder" class=""></div>
+  <div id="myequations" class="h4" style="padding:1em ;">
+    <h4>The Generated Equations are</h4>
+  </div>
+
+
+</body>
+
+
+</html>
